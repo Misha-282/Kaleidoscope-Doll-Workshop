@@ -1,9 +1,16 @@
-# Kaleidoscope Doll Workshop 森罗物语：玩偶工坊
-## 模组介绍
-为 “森罗物语：玩偶” 添加了玩家玩偶，可以使用 “电脑” 方块制作拥有玩家皮肤的玩偶。
+# Introduction
+Adds player dolls to "Kaleidoscope Doll". You can use the "Computer" block to input a player's name and craft a doll with their skin.
 
-## 游戏截图
+These dolls retain the original features: you can put them on your head, and if you pinch them, they squeak!
+
+为森罗物语添加了一个玩家玩偶，使用电脑输入玩家名称（正版ID），即可制作出带有玩家皮肤的玩偶。
+
+玩偶保留了森罗物语的特性，你可以把它们放在头上，对玩偶捏捏，它们还会吱吱叫！
+
+# Gallery
 ![Preview](https://github.com/user-attachments/assets/311193cd-f039-41e4-862c-8dee3be74857)
 
-## 授权声明
-本模组在获得了原作者允许的情况下，部分使用了 “森罗物语：玩偶” 中的素材，版权归原作者 **药水棒冰** 所有，严禁未经原作者许可用于其他项目。
+# License
+This mod uses assets from "Kaleidoscope Doll" with permission from the original author. The copyright for these assets belongs to **ysbb**. You are strictly prohibited from using these assets in other projects without permission from the original author.
+
+本模组在获得了原作者允许的情况下，部分使用了 “森罗物语：玩偶” 中的素材，版权归原作者 **药水棒冰** 所有，严禁在未获得原作者许可的情况下用于其他项目。
