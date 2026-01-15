@@ -1,9 +1,9 @@
 # Introduction
-Adds player dolls to "Kaleidoscope Doll". You can use the "Computer" block to input a player's name and craft a doll with their skin.
+Adds player dolls to "Kaleidoscope Doll". You can use the "Workshop Computer" to input a player's name and craft a doll with their skin.
 
 These dolls retain the original features: you can put them on your head, and if you pinch them, they squeak!
 
-为森罗物语添加了一个玩家玩偶，使用电脑输入玩家名称（正版ID），即可制作出带有玩家皮肤的玩偶。
+为森罗物语添加了一个玩家玩偶，使用工坊电脑输入玩家名称（正版ID），即可制作出带有玩家皮肤的玩偶。
 
 玩偶保留了森罗物语的特性，你可以把它们放在头上，对玩偶捏捏，它们还会吱吱叫！
 
