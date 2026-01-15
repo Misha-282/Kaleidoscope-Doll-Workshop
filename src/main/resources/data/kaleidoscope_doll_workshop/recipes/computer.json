@@ -5,8 +5,8 @@
     "I": {
       "item": "minecraft:iron_ingot"
     },
-    "R": {
-      "item": "minecraft:redstone"
+    "A": {
+      "item": "minecraft:amethyst_shard"
     },
     "S": {
       "item": "minecraft:smooth_stone"
@@ -14,7 +14,7 @@
   },
   "pattern": [
     "III",
-    "IRI",
+    "IAI",
     "SSS"
   ],
   "result": {
