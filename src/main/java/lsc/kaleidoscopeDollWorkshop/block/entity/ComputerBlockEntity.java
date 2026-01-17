@@ -12,6 +12,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -45,11 +46,21 @@ public class ComputerBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     // --- Inventory 接口实现 ---
     public DefaultedList<ItemStack> getItems() { return inventory; }
-    @Override public int size() { return inventory.size(); }
-    @Override public boolean isEmpty() { return inventory.isEmpty(); }
-    @Override public ItemStack getStack(int slot) { return inventory.get(slot); }
-    @Override public ItemStack removeStack(int slot, int amount) { return Inventories.splitStack(this.inventory, slot, amount); }
-    @Override public ItemStack removeStack(int slot) { return Inventories.removeStack(this.inventory, slot); }
+
+    @Override
+    public int size() { return inventory.size(); }
+
+    @Override
+    public boolean isEmpty() { return inventory.isEmpty(); }
+
+    @Override
+    public ItemStack getStack(int slot) { return inventory.get(slot); }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) { return Inventories.splitStack(this.inventory, slot, amount); }
+
+    @Override
+    public ItemStack removeStack(int slot) { return Inventories.removeStack(this.inventory, slot); }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
@@ -60,8 +71,21 @@ public class ComputerBlockEntity extends BlockEntity implements ExtendedScreenHa
         markDirty();
     }
 
-    @Override public boolean canPlayerUse(PlayerEntity player) { return true; }
-    @Override public void clear() { inventory.clear(); }
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        if (slot == 0) {
+            // 输入槽：只允许放入属于 WOOL 标签（羊毛）的物品
+            return stack.isIn(ItemTags.WOOL);
+        }
+        // 输出槽（或其他槽）：不允许外部直接放入物品
+        return false;
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) { return true; }
+
+    @Override
+    public void clear() { inventory.clear(); }
 
     @Override
     public void readNbt(NbtCompound nbt) {
