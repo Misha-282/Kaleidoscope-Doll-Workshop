@@ -7,6 +7,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
@@ -24,7 +25,13 @@ public class ComputerScreenHandler extends ScreenHandler {
         inventory.onOpen(playerInventory.player);
 
         // 槽位 0: 原材料输入
-        this.addSlot(new Slot(inventory, 0, 108, 18));
+        this.addSlot(new Slot(inventory, 0, 108, 18) {
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                // 限制槽位只接受羊毛
+                return stack.isIn(ItemTags.WOOL);
+            }
+        });
 
         // 槽位 1: 产物输出 (禁止放入)
         this.addSlot(new Slot(inventory, 1, 151, 18) {
