@@ -1,6 +1,6 @@
 {
   "modmenu.nameTranslation.kaleidoscope_doll_workshop": "Kaleidoscope Doll Workshop",
-  "modmenu.descriptionTranslation.kaleidoscope_doll_workshop": "An add-on for 'Kaleidoscope Doll' that adds more dolls.",
+  "modmenu.descriptionTranslation.kaleidoscope_doll_workshop": "An add-on for \"Kaleidoscope Doll\" that adds more dolls.",
   "itemGroup.kaleidoscope_doll_workshop.group": "Kaleidoscope Doll Workshop",
   "item.kaleidoscope_doll_workshop.player_doll": "Player Doll",
   "item.kaleidoscope_doll_workshop.player_doll.owner": "%s's Doll",
