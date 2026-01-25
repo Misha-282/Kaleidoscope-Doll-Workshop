@@ -5,6 +5,7 @@ import lsc.kaleidoscopeDollWorkshop.network.ModMessages;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -39,8 +40,9 @@ public class ComputerScreen extends HandledScreen<ComputerScreenHandler> {
         this.nameField.setDrawsBackground(false);
         this.addDrawableChild(nameField);
 
+        // 按钮点击事件：检测是否按下了 Shift 键，并将其状态传递给发送方法
         this.craftButton = ButtonWidget.builder(Text.literal("✔"), button -> {
-            sendCraftPacket();
+            sendCraftPacket(Screen.hasShiftDown());
         }).dimensions(this.x + 80, this.y + 18, 16, 16).build();
         this.addDrawableChild(craftButton);
     }
@@ -84,11 +86,12 @@ public class ComputerScreen extends HandledScreen<ComputerScreenHandler> {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    private void sendCraftPacket() {
+    private void sendCraftPacket(boolean craftAll) {
         String name = nameField.getText();
         if (name != null && !name.isEmpty()) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeString(name);
+            buf.writeBoolean(craftAll); // 写入批量制作标志位
             ClientPlayNetworking.send(ModMessages.CRAFT_DOLL_ID, buf);
         }
     }
@@ -102,6 +105,7 @@ public class ComputerScreen extends HandledScreen<ComputerScreenHandler> {
         int y = (height - backgroundHeight) / 2;
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
+        // 如果输出槽为空，绘制背景图标提示
         if (!this.handler.getSlot(1).hasStack()) {
             context.drawTexture(OUTPUT_SLOT_TEXTURE, x + 151, y + 18, 0, 0, 16, 16, 16, 16);
         }
