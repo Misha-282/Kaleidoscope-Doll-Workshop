@@ -3,7 +3,7 @@
 	"id": "kaleidoscope_doll_workshop",
 	"version": "${version}",
 	"name": "Kaleidoscope Doll Workshop",
-	"description": "An add-on for 'Kaleidoscope Doll' that adds more dolls.",
+	"description": "An add-on for \"Kaleidoscope Doll\" that adds more dolls.",
 	"authors": [
 		"Li Suchen"
 	],
