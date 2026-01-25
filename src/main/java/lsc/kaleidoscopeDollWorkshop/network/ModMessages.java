@@ -19,7 +19,9 @@ public class ModMessages {
 
     public static void registerC2SPackets() {
         ServerPlayNetworking.registerGlobalReceiver(CRAFT_DOLL_ID, (server, player, handler, buf, responseSender) -> {
+            // 读取玩家输入的名称和是否批量制作的标志
             String targetName = buf.readString();
+            boolean craftAll = buf.readBoolean();
 
             server.execute(() -> {
                 if (player.currentScreenHandler instanceof ComputerScreenHandler screenHandler) {
@@ -28,29 +30,40 @@ public class ModMessages {
 
                     // 1. 检查原材料 (羊毛)
                     if (inputStack.isIn(ItemTags.WOOL)) {
-                        boolean canCraft = false;
+                        int craftAmount = 0;
                         boolean isNewStack = false;
 
-                        // 2. 检查是否可制作或堆叠
+                        // 2. 计算可制作的数量
                         if (outputStack.isEmpty()) {
-                            canCraft = true;
+                            // 输出槽为空：计算最大可堆叠数量与原材料数量的最小值
+                            int maxOutputSize = ModItems.PLAYER_DOLL.getMaxCount();
+                            int inputCount = inputStack.getCount();
+
+                            // 若批量制作则取最大可能值，否则只制作1个
+                            craftAmount = craftAll ? Math.min(inputCount, maxOutputSize) : 1;
                             isNewStack = true;
                         } else {
-                            if (outputStack.getItem() == ModItems.PLAYER_DOLL && outputStack.getCount() < outputStack.getMaxCount()) {
+                            // 输出槽已有物品：检查是否为同名玩家玩偶且未达到堆叠上限
+                            if (outputStack.getItem() == ModItems.PLAYER_DOLL) {
                                 GameProfile existingProfile = DollItem.getGameProfile(outputStack);
                                 if (existingProfile != null && existingProfile.getName() != null && existingProfile.getName().equals(targetName)) {
-                                    canCraft = true;
-                                    isNewStack = false;
+                                    int spaceLeft = outputStack.getMaxCount() - outputStack.getCount();
+                                    int inputCount = inputStack.getCount();
+
+                                    if (spaceLeft > 0) {
+                                        // 若批量制作则填满剩余空间或耗尽材料，否则只制作1个
+                                        craftAmount = craftAll ? Math.min(inputCount, spaceLeft) : 1;
+                                    }
                                 }
                             }
                         }
 
                         // 3. 执行制作逻辑
-                        if (canCraft) {
-                            inputStack.decrement(1);
+                        if (craftAmount > 0) {
+                            inputStack.decrement(craftAmount);
 
                             if (isNewStack) {
-                                ItemStack doll = new ItemStack(ModItems.PLAYER_DOLL);
+                                ItemStack doll = new ItemStack(ModItems.PLAYER_DOLL, craftAmount);
                                 GameProfile tempProfile = new GameProfile(null, targetName);
                                 NbtCompound ownerTag = NbtHelper.writeGameProfile(new NbtCompound(), tempProfile);
                                 doll.getOrCreateNbt().put("Owner", ownerTag);
@@ -59,7 +72,7 @@ public class ModMessages {
                                 // 异步获取皮肤数据
                                 triggerSkinFetch(screenHandler, targetName, tempProfile);
                             } else {
-                                outputStack.increment(1);
+                                outputStack.increment(craftAmount);
                             }
 
                             if (screenHandler.getInventory() instanceof BlockEntity be) {
