@@ -45,7 +45,7 @@ public class ComputerScreen extends AbstractContainerScreen<ComputerMenu> {
         this.addRenderableWidget(craftButton);
     }
 
-    // 点击空白处失去焦点
+    // 点击空白处时，如果焦点在输入框或按钮上则取消焦点
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.nameField.isFocused() && !this.nameField.isMouseOver(mouseX, mouseY)) {
@@ -77,12 +77,13 @@ public class ComputerScreen extends AbstractContainerScreen<ComputerMenu> {
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
+        // 如果输入框未聚焦且为空，显示搜索提示文本
         if (!this.nameField.isFocused() && this.nameField.getValue().isEmpty()) {
             guiGraphics.drawString(this.font, Component.translatable("gui.kaleidoscope_doll_workshop.computer.search"),
                     this.nameField.getX(), this.nameField.getY(), 0xAAAAAA, false);
         }
 
-        // 原料槽空置提示
+        // 原料槽空置时的提示信息
         if (isHovering(108, 18, 16, 16, mouseX, mouseY)) {
             if (!this.menu.getSlot(0).hasItem()) {
                 guiGraphics.renderTooltip(this.font, Component.translatable("tooltip.kaleidoscope_doll_workshop.computer.input"), mouseX, mouseY);
@@ -101,15 +102,18 @@ public class ComputerScreen extends AbstractContainerScreen<ComputerMenu> {
         int y = (height - imageHeight) / 2;
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
+        // 如果输出槽为空，绘制输出槽的背景图标
         if (!this.menu.getSlot(1).hasItem()) {
             guiGraphics.blit(OUTPUT_SLOT_TEXTURE, x + 151, y + 18, 0, 0, 16, 16, 16, 16);
         }
     }
 
+    // 发送合成请求数据包
     private void sendPacket() {
         String name = nameField.getValue();
         if (name != null && !name.isEmpty()) {
-            ModMessages.sendToServer(new PacketCraftDoll(name));
+            // 构造数据包时传入当前的Shift键状态，以决定是否进行批量合成
+            ModMessages.sendToServer(new PacketCraftDoll(name, hasShiftDown()));
         }
     }
 
