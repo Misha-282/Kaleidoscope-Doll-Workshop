@@ -121,6 +121,12 @@ repositories {
     //     dir 'libs'
     // }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    // Curios API (饰品栏兼容)
+    maven { name = 'Illusive Soulworks maven'; url = 'https://maven.theillusivec4.top/' }
+    // Accessories API (饰品栏兼容)
+    maven { url = 'https://maven.wispforest.io/releases' }
+    // Accessories 依赖的 Cloth Config
+    maven { url = 'https://maven.shedaniel.me/' }
 }
 
 dependencies {
@@ -146,6 +152,22 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.8.2')
+
+    // Curios (可选兼容依赖): 与 GeckoLib 相同, 直接使用 implementation fg.deobf(...) 单行引入
+    // 同时进入 compileClasspath 与 dev 运行 classpath, 开发运行游戏时模组自动加载
+    // 参考: https://docs.illusivesoulworks.com/1.20.x/curios/getting-started
+    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+
+    // Accessories (可选兼容依赖): 1.20.1 的 Forge 构件为 accessories-neoforge (兼容 Forge 47.x)
+    // 参考: https://docs.wispforest.io/legacy/accessories/developer/dev_setup/
+    // 其 POM 声明的 Sinytra fabric-api 与 MixinExtras 已内嵌 (Jar-in-Jar) 在 jar 中, 无需解析;
+    // Cloth Config 为其外部依赖, 单独以 fg.deobf 引入以保证 dev 运行时被正确反混淆
+    implementation fg.deobf("io.wispforest:accessories-neoforge:${accessories_version}") {
+        exclude group: 'dev.su5ed.sinytra.fabric-api'
+        exclude group: 'io.github.llamalad7'
+        exclude group: 'me.shedaniel.cloth'
+    }
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
